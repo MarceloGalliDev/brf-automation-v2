@@ -27,8 +27,10 @@ sqlparse = "==0.4.4"
 typing-extensions = "==4.7.1"
 tzdata = "==2023.3"
 urllib3 = "*"
+loguru = "*"
 
 [dev-packages]
+ipykernel = "*"
 
 [requires]
 python_version = "3.10"

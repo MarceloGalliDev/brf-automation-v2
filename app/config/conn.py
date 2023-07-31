@@ -1,6 +1,7 @@
 #carregamento e importações
 from sqlalchemy import create_engine, exc
 from dotenv import load_dotenv
+from loguru import logger
 import os
 import logging
 
@@ -13,21 +14,18 @@ class DatabaseConnection:
         self.db_url = os.getenv('URL')
 
     def initialize_logging(self):
-        if not os.path.exists(self.LOG_DIRECTORY):
-            os.makedirs(self.LOG_DIRECTORY)
-        logging.basicConfig(
-            filename=self.LOG_FILE,
-            level=logging.INFO,
-            format='%(asctime)s %(message)s',
-            datefmt='%d/%m/%Y %I:%M:%S %p -',
-            encoding='utf-8'
+        logger.add(
+            sink='log_{time}.log', 
+            level='INFO', 
+            rotation='1 day',
+            format='{time:YYYY-MM-DD} | {line} | {function}: {message}'
         )
 
 
     def log_data(self):        
         for arquivo in os.listdir(self.LOG_DIRECTORY):
             if arquivo.endswith('.log'):
-                logging.info('Arquivo iniciado')
+                logger.info(msg='Arquivo iniciado')
 
         
     def get_db_engine(self):
@@ -36,12 +34,12 @@ class DatabaseConnection:
             engine = create_engine(self.db_url)
             # Test connection
             with engine.connect() as connection:
-                logging.info('Conexão estabelecida!')
+                logger.info('Conexão estabelecida!')
                 pass
-            logging.info('Banco de dados conectado!')
+            logger.info('Banco de dados conectado!')
             return engine
         except exc.SQLAlchemyError as e:
-            logging.info(f"Error: {e}")
+            logger.info(f"Error: {e}")
             return None
 
 
