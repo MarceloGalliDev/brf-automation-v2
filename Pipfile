@@ -4,7 +4,29 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pandas = "*"
+pandas = "==2.0.3"
+asgiref = "==3.7.2"
+certifi = "==2023.5.7"
+charset-normalizer = "==3.2.0"
+et-xmlfile = "==1.1.0"
+greenlet = "==2.0.2"
+idna = "==3.4"
+numpy = "==1.25.1"
+openpyxl = "==3.1.2"
+protobuf = "==3.20.3"
+psycopg = "==3.1.9"
+psycopg2 = "==2.9.6"
+pyodbc = "*"
+python-dateutil = "==2.8.2"
+python-dotenv = "*"
+pytz = "==2023.3"
+requests = "==2.31.0"
+six = "==1.16.0"
+sqlalchemy = "*"
+sqlparse = "==0.4.4"
+typing-extensions = "==4.7.1"
+tzdata = "==2023.3"
+urllib3 = "*"
 
 [dev-packages]
 
