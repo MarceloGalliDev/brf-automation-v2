@@ -3,7 +3,6 @@ from sqlalchemy import create_engine, exc
 from dotenv import load_dotenv
 from loguru import logger
 import os
-import logging
 
 
 class DatabaseConnection:
@@ -15,7 +14,7 @@ class DatabaseConnection:
 
     def initialize_logging(self):
         logger.add(
-            sink='log_{time}.log', 
+            sink='D:/Python/brf-automation-v2/app/log/log_{time:YYYY-MM-DD}.log', 
             level='INFO', 
             rotation='1 day',
             format='{time:YYYY-MM-DD} | {line} | {function}: {message}'
@@ -25,7 +24,7 @@ class DatabaseConnection:
     def log_data(self):        
         for arquivo in os.listdir(self.LOG_DIRECTORY):
             if arquivo.endswith('.log'):
-                logger.info(msg='Arquivo iniciado')
+                logger.info('Arquivo iniciado')
 
         
     def get_db_engine(self):
@@ -44,6 +43,7 @@ class DatabaseConnection:
 
 
 if __name__ == "__main__":
-    db_connection = DatabaseConnection()    
+    db_connection = DatabaseConnection()
+    db_connection.initialize_logging()
     db_connection.log_data()
     db_connection.get_db_engine()

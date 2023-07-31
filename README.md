@@ -11,3 +11,18 @@
 - ver dependencias = pipenv graph
 - verificar vulnerability = pipenv check
 
+# Eleminando path duplicado
+### Get current PYTHONPATH and convert to an array
+$paths = $env:PYTHONPATH -split ';'
+
+### Get unique paths
+$uniquePaths = $paths | Get-Unique
+
+### Convert the array back to a string
+$newPythonPath = $uniquePaths -join ';'
+
+### Set the new PYTHONPATH
+$env:PYTHONPATH = $newPythonPath
+
+### Print the new PYTHONPATH
+$env:PYTHONPATH
