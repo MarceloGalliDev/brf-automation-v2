@@ -19,7 +19,7 @@ class ReportSender:
         self._send_vendas()
         self._send_forca_de_vendas()
         self._send_clientes()
-        # self._send_emails()
+        self._send_emails()
         
     def _connection(self):
         self.connection.initialize_logging()
