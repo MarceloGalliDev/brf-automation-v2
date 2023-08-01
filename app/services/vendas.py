@@ -15,6 +15,10 @@ class Vendas:
         self.conn = conn.DatabaseConnection.get_db_engine(self)
         
     def vendas_query(self, table_name, conn, unid_codigo):
+        if isinstance(unid_codigo, list):
+            unid_values = ",".join([f"'{code}'" for code in unid_codigo])
+        else:
+            unid_values = f"'{unid_codigo}'"
         query = (f"""
             SELECT 
                 mprd.mprd_transacao AS transacao,
@@ -36,7 +40,7 @@ class Vendas:
             LEFT JOIN produtos AS prod ON mprd.mprd_prod_codigo = prod.prod_codigo
             LEFT JOIN clientes AS clie ON mprc.mprc_codentidade = clie.clie_codigo
             WHERE mprd_status = 'N' 
-            AND mprd_unid_codigo IN ({unid_codigo})
+            AND mprd_unid_codigo IN ({unid_values})
             AND prod.prod_marca IN ('BRF', 'BRF IN NATURA')
             AND mprd.mprd_dcto_codigo IN ('6666','6668','7339','7335','7338','7337','7260','7263','7262','7268','7264','7269','7267','7319','7318', '6680','6890')
             AND mprc.mprc_vend_codigo NOT IN ('0','00','000','0000','')
@@ -99,26 +103,29 @@ class Vendas:
         logger.info('Processamento de dados vendas OK!')
         return processed_rows
     
-    def save_to_excel_and_txt(self, processed_rows, unid_codigo):
+    def save_to_excel_and_txt(self, processed_rows, unid_codigo, data_atual):
         wb = openpyxl.Workbook()
         ws = wb.active
         ws['A1'] = 'HVENDA1101838723010513'
         for index, row_value in enumerate(processed_rows, start=2):
             ws.cell(row=index, column=1).value = row_value
             
+        if unid_codigo == ['003','010']:
+            unid_codigo = '003'
         nome_arquivo = (f'VENDASDUSNEI{unid_codigo}{data_atual}')
         ws.title = data_atual
-        data_atual_pasta = datetime.now().strftime("%Y-%m-%d")
-        diretorio = f'{self.path_dados}/{data_atual_pasta}'
+        data_pasta = datetime.now().strftime("%Y-%m-%d")
+        diretorio = f'{self.path_dados}/{data_pasta}'
         if not os.path.exists(diretorio):
                 os.mkdir(diretorio)
-        local_arquivo = os.path.join(f'{self.path_dados}/{nome_arquivo}.xlsx')
+        local_arquivo = os.path.join(f'{diretorio}/{nome_arquivo}.xlsx')
         wb.save(local_arquivo)
         
         time.sleep(5)
         
-        local_arquivo_txt = os.path.join(f'{self.path_dados}/{nome_arquivo}.txt')
+        local_arquivo_txt = os.path.join(f'{diretorio}/{nome_arquivo}.txt')
         with open(local_arquivo_txt, 'w') as txt_file:
+            txt_file.write('HVENDA1101838723010513' + '\n')
             for row in processed_rows:
                 txt_file.write(row + '\n')
         
