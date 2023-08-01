@@ -17,9 +17,8 @@ class DatabaseConnection:
             sink='D:/Python/brf-automation-v2/app/log/log_{time:YYYY-MM-DD}.log', 
             level='INFO', 
             rotation='1 day',
-            format='{time:YYYY-MM-DD} | {line} | {function}: {message}'
+            format='{time:YYYY-MM-DD} | {function}: {message}'
         )
-
 
     def log_data(self):        
         for arquivo in os.listdir(self.LOG_DIRECTORY):

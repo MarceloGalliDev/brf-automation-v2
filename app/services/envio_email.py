@@ -17,8 +17,9 @@ class Envio_Email:
         self.password_email = os.getenv('EMAIL_PASSWORD')
         self.email_from = os.getenv('EMAIL_FROM')
         self.email_to = os.getenv('EMAIL_TO')
-        self.email_cc = os.getenv('EMAIL_CC')        
+        self.email_cc = os.getenv('EMAIL_CC')
         
+      
     def envio_email(self):
         data_atual = datetime.now().strftime("%Y-%m-%d-%H:%M")
         data_atual_email = datetime.now().strftime("%Y-%m-%d")
@@ -68,7 +69,11 @@ class Envio_Email:
                 
             logger.info('Email enviado com sucesso!')
         except Exception as e:
-            logger.info(f'Erro ao enviar email: {e}')
+            if e.smtp_code == 552:
+                logger.error("Email excedeu limite de tamanho!")
+            else:
+                logger.error(f"SMTP Erro: {e.smtp_error}")
+                logger.info(f'Erro ao enviar email: {e}')
         
 if __name__ == "__main__":
   envio_email_instance = Envio_Email()

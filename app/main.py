@@ -1,8 +1,10 @@
 from loguru import logger
 from services import estoques, produtos, vendas, forca_de_vendas, clientes, envio_email
+from config import conn
 
 class ReportSender:
     def __init__(self):
+        self.connection = conn.DatabaseConnection()
         self.estoque = estoques.Estoques()
         self.produtos = produtos.Produtos()
         self.vendas = vendas.Vendas()
@@ -11,12 +13,19 @@ class ReportSender:
         self.envio_email = envio_email.Envio_Email()
 
     def send_reports(self):
+        self._connection()
         self._send_estoque()
         self._send_produtos()
         self._send_vendas()
         self._send_forca_de_vendas()
         self._send_clientes()
-        self._send_emails()
+        # self._send_emails()
+        
+    def _connection(self):
+        self.connection.initialize_logging()
+        self.connection.log_data()
+        self.connection.get_db_engine()
+        
 
     def _send_estoque(self):
         self.estoque.estoques()
