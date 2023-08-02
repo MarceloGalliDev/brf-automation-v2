@@ -147,3 +147,4 @@ cython_debug/
 # Arquivos Excel e TXT
 *.txt
 *.xlsx
+app/data/2023-08-01/2023-08-01.rar
