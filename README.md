@@ -11,6 +11,9 @@
 - ver dependencias = pipenv graph
 - verificar vulnerability = pipenv check
 
+# Executando scripts
+- python -m app.services.vendas
+
 # Eleminando path duplicado
 ### Get current PYTHONPATH and convert to an array
 $paths = $env:PYTHONPATH -split ';'

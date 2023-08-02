@@ -1,4 +1,4 @@
-#carregamento e importações
+# flake8: noqa
 from sqlalchemy import create_engine, exc
 from dotenv import load_dotenv
 from loguru import logger
