@@ -1,3 +1,4 @@
+# flake8: noqa W293
 import os
 import time
 import openpyxl
@@ -5,14 +6,15 @@ import pandas as pd
 from loguru import logger
 from datetime import datetime
 from dotenv import load_dotenv
-from config import conn
+from conn import DatabaseConnection
+
 
 class Produtos:
     def __init__(self):
         load_dotenv()
         self.path_dados = os.getenv('DATA_DIRECTORY')
         self.unid_codigos = ["001", "002", ['003','010']]
-        self.conn = conn.DatabaseConnection.get_db_engine(self)
+        self.conn = DatabaseConnection.get_db_engine(self)
     
     def produtos_query(self, conn, unid_codigo):
         if isinstance(unid_codigo, list):

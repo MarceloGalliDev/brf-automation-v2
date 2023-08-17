@@ -1,10 +1,11 @@
+# flake8: noqa W293
 from loguru import logger
-from services import estoques, produtos, vendas, forca_de_vendas, clientes, envio_email
-from config import conn
+import estoques, produtos, vendas, forca_de_vendas, clientes, envio_email
+from conn import DatabaseConnection
 
 class ReportSender:
     def __init__(self):
-        self.connection = conn.DatabaseConnection()
+        self.connection = DatabaseConnection()
         self.estoque = estoques.Estoques()
         self.produtos = produtos.Produtos()
         self.vendas = vendas.Vendas()

@@ -1,3 +1,4 @@
+# flake8: noqa W293
 import os
 import time
 import openpyxl
@@ -5,22 +6,23 @@ import pandas as pd
 from loguru import logger
 from datetime import datetime
 from dotenv import load_dotenv
-from config import conn
+from conn import DatabaseConnection
 
 class Estoques:
     def __init__(self):
         load_dotenv()
         self.path_dados = os.getenv('DATA_DIRECTORY')
         self.unid_codigos = ['001', '002', ['003','010']]
-        self.conn = conn.DatabaseConnection.get_db_engine(self)
-    
+        self.conn = DatabaseConnection.get_db_engine(self)
+
+
     def estoques_query(self, conn, unid_codigo):
         if isinstance(unid_codigo, list):
             unid_values = ",".join([f"'{code}'" for code in unid_codigo])
         else:
             unid_values = f"'{unid_codigo}'"
         query = (f"""
-            SELECT 
+            SELECT
                 TO_CHAR(prun.prun_estoque1, '000000000000999D9999') AS estoque,
                 TO_CHAR((prun.prun_estoque1 * prod.prod_pesoliq), '000000000000999D9999') AS qtde,
                 prun.prun_unid_codigo AS unidade,
@@ -40,18 +42,19 @@ class Estoques:
         """)
         return pd.read_sql_query(query, conn)
 
+
     def process_rows(self, df, unid_codigo):
         processed_rows = []
         for index, row in df.iterrows():
             caracter_adc = 'E'
-            
+
             if unid_codigo == '001':
                 cnpj_unid = '81894255000147'
             elif unid_codigo == '002':
                 cnpj_unid = '81894255000228'
             else:
                 cnpj_unid = '81894255000309'
-                
+
             cod_barras = row['cod_barras'].zfill(13)
             estoque = row['qtde'].strip()
             embalagem = row['embalagem']
@@ -59,17 +62,17 @@ class Estoques:
                 tipoUnid = "0001"
             else:
                 tipoUnid = "0002"
-            
+
             espaco_branco1 = ' '
             espaco_branco2 = ' '*20
             espaco_branco3 = ' '*8
-            
+
             processed_row = (f'{caracter_adc}{cnpj_unid}{cod_barras}{espaco_branco1}{estoque}{espaco_branco2}{espaco_branco3}{tipoUnid}')
             processed_rows.append(processed_row)
         logger.info('Query estoques OK!')
         logger.info('Processamento de dados estoques OK!')
         return processed_rows
-    
+
     def save_to_excel_and_txt(self, processed_rows, unid_codigo, data_atual):
         wb = openpyxl.Workbook()
         ws = wb.active
@@ -77,7 +80,7 @@ class Estoques:
         ws['A1'] = (f'HESTOQ1101838723010513{data_atual_estoque}')
         for index, row_value in enumerate(processed_rows, start=2):
             ws.cell(row=index, column=1).value = row_value
-        
+
         if unid_codigo == ['003','010']:
             unid_codigo = '003'
         nome_arquivo = (f'ESTOQUESDUSNEI{unid_codigo}{data_atual}')
@@ -88,9 +91,9 @@ class Estoques:
                 os.mkdir(diretorio)
         local_arquivo = os.path.join(f'{diretorio}/{nome_arquivo}.xlsx')
         wb.save(local_arquivo)
-        
+
         time.sleep(2)
-        
+
         local_arquivo_txt = os.path.join(f'{diretorio}/{nome_arquivo}.txt')
         with open(local_arquivo_txt, 'w') as txt_file:
             txt_file.write((f'HESTOQ1101838723010513{data_atual_estoque}') + '\n')

@@ -1,3 +1,4 @@
+# flake8: noqa W293
 import os
 import glob
 import smtplib
@@ -9,6 +10,7 @@ from dotenv import load_dotenv
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
+
 
 class Envio_Email:
     def __init__(self):

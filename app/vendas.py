@@ -6,10 +6,7 @@ import pandas as pd
 from loguru import logger
 from datetime import datetime
 from dotenv import load_dotenv
-
-import sys
-sys.path.append('/app/config/')
-from ..config.conn import DatabaseConnection
+from conn import DatabaseConnection
 
 
 class Vendas:
