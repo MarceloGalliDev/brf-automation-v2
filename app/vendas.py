@@ -50,8 +50,8 @@ class Vendas:
             AND clie.clie_cepres NOT IN ('00000-000','','0','00000','00000000')
             AND clie.clie_cepres > '0'
             AND clie.clie_cepres NOT IN ('')
+            AND mprd.mprd_datamvto > CURRENT_DATE - INTERVAL '7 DAYS'
         """)
-            # AND mprd.mprd_datamvto > CURRENT_DATE - INTERVAL '7 DAYS'
         return pd.read_sql_query(query, conn)
         
     def process_rows(self, df, unid_codigo):
