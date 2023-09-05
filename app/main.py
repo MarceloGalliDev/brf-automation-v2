@@ -7,7 +7,6 @@ import ctypes
 import threading
 
 MB_OK = 0x0
-TIMEOUT = 10000
 
 def show_message_box():
     ctypes.windll.user32.MessageBoxW(0, "Envio de arquivos BRF realizado!", "Automação BRF", MB_OK)
@@ -63,7 +62,7 @@ class ReportSender:
     t = threading.Thread(target=show_message_box)
     t.start
 
-    time.sleep(TIMEOUT / 1000.0)
+    time.sleep(7200)
 
     hwnd = ctypes.windll.user32.FindWindowW(None, "Automação BRF")
     if hwnd != 0:
