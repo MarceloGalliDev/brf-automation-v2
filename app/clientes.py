@@ -124,6 +124,8 @@ class Clientes:
         for unid_codigo in self.unid_codigos:
             df = pd.concat([self.clientes_query( self.conn, unid_codigo)])
             
+            df = df[~df['clie_nome'].str.contains('vendedor', case=False, na=False)]
+            
             processed_rows = self.process_rows(df, unid_codigo)
             data_atual = datetime.now().strftime("%Y%m%d%H%M%S%f")[:-3]
             self.save_to_excel_and_txt(processed_rows, unid_codigo, data_atual)
