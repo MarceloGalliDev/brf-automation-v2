@@ -1,5 +1,5 @@
 # flake8: noqa W293
-
+# pylint: disable=all
 import os
 import time
 import openpyxl
