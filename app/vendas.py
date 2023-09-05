@@ -24,6 +24,7 @@ class Vendas:
         query = (f"""
             SELECT 
                 mprd.mprd_transacao AS transacao,
+                clie.clie_nome AS clie_nome,
                 clie.clie_cnpjcpf AS cnpj_cpf,
                 mprd.mprd_datamvto AS data_mvto,
                 mprd.mprd_numerodcto AS nfe,
@@ -50,8 +51,9 @@ class Vendas:
             AND clie.clie_cepres NOT IN ('00000-000','','0','00000','00000000')
             AND clie.clie_cepres > '0'
             AND clie.clie_cepres NOT IN ('')
-            AND mprd.mprd_datamvto > CURRENT_DATE - INTERVAL '7 DAYS'
+            AND mprd.mprd_datamvto > '2023-07-01'
         """)
+        # AND mprd.mprd_datamvto > CURRENT_DATE - INTERVAL '30 DAYS'
         return pd.read_sql_query(query, conn)
         
     def process_rows(self, df, unid_codigo):
@@ -140,6 +142,8 @@ class Vendas:
             tables = ['movprodd0122', 'movprodd0222', 'movprodd0322', 'movprodd0422', 'movprodd0522', 'movprodd0622', 'movprodd0722', 'movprodd0822', 'movprodd0922', 'movprodd1022', 'movprodd1122', 'movprodd1222', 'movprodd0123', 'movprodd0223', 'movprodd0323', 'movprodd0423', 'movprodd0523', 'movprodd0623', 'movprodd0723', 'movprodd0823', 'movprodd0923', 'movprodd1023',  'movprodd1123', 'movprodd1223']
             
             df = pd.concat([self.vendas_query(table, self.conn, unid_codigo)for table in tables])
+            
+            df = df[~df['clie_nome'].str.contains('vendedor', case=False, na=False)]
             
             processed_rows = self.process_rows(df, unid_codigo)
             data_atual = datetime.now().strftime("%Y%m%d%H%M%S%f")[:-3]
